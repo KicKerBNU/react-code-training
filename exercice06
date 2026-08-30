@@ -1,0 +1,61 @@
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
+
+const USERS_URL = 'https://jsonplaceholder.typicode.com/users';
+
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+};
+
+function AgentFetchTable() {
+  const [status, setStatus] = useState('');
+  const [users, setUsers] = useState<User[]>([]);
+
+  async function handleLoad() {
+    setStatus('Loading');
+    setUsers([]);
+    try {
+      const response = await fetch(USERS_URL);
+      if (!response.ok) throw new Error('Failed');
+      const list = (await response.json()) as User[];
+      setUsers(list);
+      setStatus('');
+    } catch {
+      setStatus('Failed');
+    }
+  }
+
+  const ordered = [...users].sort((a, b) => a.name.localeCompare(b.name));
+
+  return (
+    <div>
+      <button id="load-btn" type="button" onClick={handleLoad}>Load users</button>
+      <div id="status">{status}</div>
+      <table id="agents-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ordered.map((user) => (
+            <tr key={user.id} data-name={user.name}>
+              <td>{user.name}</td>
+              <td>{user.username}</td>
+              <td>{user.email}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<AgentFetchTable />);

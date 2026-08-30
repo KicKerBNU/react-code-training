@@ -1,0 +1,79 @@
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+
+type Agent = { name: string; ext: string };
+
+const AGENTS: Agent[] = [
+  { name: 'Ava Reed', ext: '101' },
+  { name: 'Noah Patel', ext: '202' },
+  { name: 'Luis Costa', ext: '303' },
+];
+
+const NOTES: Record<string, string> = {
+  'Ava Reed': 'Queue specialist',
+  'Noah Patel': 'Night shift',
+  'Luis Costa': 'Spanish queue',
+};
+
+function loadNote(name: string): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(NOTES[name] ?? ''), 150);
+  });
+}
+
+function AgentList({setSelectedAgentName}) {
+  handleClick = (name) => {
+    setSelectedAgentName(name);
+  }
+  return (
+    <ul id="agent-list">
+      {AGENTS.map((item, index) => {
+        return (
+          <li key={index} onClick={() => handleClick(item.name)}>{item.name}</li>
+        )
+      })}
+    </ul>
+  );
+}
+
+function AgentDetail({selectedAgentName}) {
+  return (
+    <div>
+      <div id="agent-detail">{selectedAgentName ? '' : 'No agent selected'}</div>
+      <div id="detail-name">{selectedAgentName}</div>
+      <div id="detail-ext">{AGENTS.map((x) => x.name === selectedAgentName ? x.ext : '')}</div>
+    </div>
+  );
+}
+
+function Application() {
+  const [selectedAgentName, setSelectedAgentName] = useState<String>()
+  const [viewCount, setViewCount] = useState<Number>(0)
+  const [noteText, setNoteText] = useState<String>()
+
+  useEffect(() => {
+    if(!selectedAgentName){
+      setNoteText('');
+      return
+    }
+    setNoteText('Loading');
+    loadNote(selectedAgentName).then((text) => {
+      setNoteText(text);
+    });
+    setViewCount(prev => prev+1)
+    
+  },[selectedAgentName])
+
+  return (
+    <div>
+      <div id="view-count">{viewCount}</div>
+      <div id="note">{noteText}</div>
+      <AgentList selectedAgentName={selectedAgentName} setSelectedAgentName={setSelectedAgentName} />
+      <AgentDetail selectedAgentName={selectedAgentName} />
+    </div>
+  );
+}
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<Application />);

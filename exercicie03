@@ -1,0 +1,87 @@
+import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { create } from 'zustand';
+
+type QueueStore = {
+  agents: string[];
+  add: (name: string) => void;
+  remove: (name: string) => void;
+  clear: () => void;
+};
+
+const useQueueStore = create<QueueStore>((set) => ({
+  agents: [],
+  add: (name) => set((state) => ({ agents: [...state.agents, name] })),
+  remove: (name) =>
+    set((state) => ({ agents: state.agents.filter((item) => item !== name) })),
+  clear: () => set({ agents: [] }),
+}));
+
+function QueueComposer() {
+  const addAgent = useQueueStore((state) => state.add);
+  const [agent, setAgent] = useState('');
+  const handleClick = () => {
+    addAgent(agent)
+    setAgent('')
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAgent(event.target.value);
+  }
+
+  return (
+    <div>
+      <input id="agent-input" value={agent} onChange={handleChange} />
+      <button id="add-btn" onClick={handleClick} type="button">Add</button>
+    </div>
+  );
+}
+
+function QueueBoard() {
+  const agentList = useQueueStore((state) => state.agents);
+  const removeAgentItem = useQueueStore((state) => state.remove)
+  const handleRemoveClick = (item) => {
+    removeAgentItem(item);
+  }
+
+  return <ul id="queue-list">
+      {agentList.map((item,index) => {
+        return (
+          <li 
+            key={index}
+            data-name={item}>{item}
+            <button data-remove={item} onClick={ () => handleRemoveClick(item)}>Data remove</button>
+          </li>
+        )
+      })}
+    </ul>;
+}
+
+function QueueStats() {
+  const clearAgent = useQueueStore((state) => state.clear);
+  const agentList = useQueueStore((state) => state.agents);
+
+  handleClick = () => {
+    clearAgent();
+  }
+  return (
+    <div>
+      <div id="queue-count">{agentList.length ?? 0}</div>
+      <button id="clear-btn" type="button" onClick={handleClick}>Clear</button>
+    </div>
+  );
+}
+
+function Application() {
+  return (
+    <div>
+      <QueueComposer />
+      <QueueBoard />
+      <QueueStats />
+    </div>
+  );
+}
+
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<Application />);
