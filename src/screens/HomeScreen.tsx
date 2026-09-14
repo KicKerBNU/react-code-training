@@ -1,4 +1,4 @@
-import { mockAssessment } from '../data/catalog'
+import { mockAssessment, catalog, isReactItem } from '../data/catalog'
 import { studyArticles } from '../data/studyNotes'
 import { useSession } from '../state/SessionContext'
 
@@ -48,7 +48,7 @@ export function HomeScreen() {
           </p>
           <div className="meta-row">
             <span className="pill">{studyArticles.length} guides</span>
-            <span className="pill">13 React challenges</span>
+            <span className="pill">{catalog.filter(isReactItem).length} React challenges</span>
           </div>
           <button className="btn btn-ghost" onClick={enterStudy}>
             Open study hub

@@ -26,6 +26,7 @@ export const mockAssessment: AssessmentDefinition = {
     'react-zustand-queue',
     'react-call-session',
     'react-theme-context',
+    'react-city-weather',
     'react-agent-table',
     'mcq-react',
     'written-eng',

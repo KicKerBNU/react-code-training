@@ -24,7 +24,7 @@ Use this until the chrome feels boring:
 
 1. Name and email (Coderbyte's candidate gate).
 2. Instructions + 3-hour clock. **Begin Assessment** starts the timer. It does not pause.
-3. Dashboard of React items: Agent Directory, Agent Panel, Zustand Queue, Call Session, Theme Context, multiple choice, written.
+3. Dashboard of React items: Agent Directory, Agent Panel, Zustand Queue, Call Session, Theme Context, City Weather Search, Agent Fetch Table, multiple choice, written.
 4. Coding items open a briefing page, then the editor: prompt on the left, Monaco on the right, live preview for React, Reference Search, **Run tests** / **Submit Solution**.
 5. Sample tests are named. Hidden tests stay unnamed until you submit.
 6. Copy/paste is counted and flagged, the same way Coderbyte records it.
